@@ -56,12 +56,13 @@ class Servicio(Entidad):  # Clase abstracta Servicio, hereda de Entidad
 
     # ---------- Método "sobrecargado" con parámetros opcionales ----------
 
-    def calcular_costo(self, duracion, impuesto=None, descuento=0.0):  # Variantes según parámetros
+    def calcular_costo(self, duracion, impuesto=None, descuento=0.0, recargo=0.0):  # Variantes según parámetros
         """
         Calcula el costo total. Variantes de uso:
-          calcular_costo(duracion)                     -> con IVA por defecto
-          calcular_costo(duracion, impuesto)           -> con impuesto personalizado
-          calcular_costo(duracion, impuesto, descuento) -> con impuesto y descuento
+          calcular_costo(duracion)                              -> con IVA por defecto
+          calcular_costo(duracion, impuesto)                    -> con impuesto personalizado
+          calcular_costo(duracion, impuesto, descuento)         -> con impuesto y descuento
+          calcular_costo(duracion, impuesto, descuento, recargo) -> además con recargo (ej. fin de semana)
         """
         self.validar_parametros(duracion)  # Primero se valida la duración (puede lanzar excepción)
         impuesto = self.IVA if impuesto is None else impuesto  # Si no se da impuesto, se usa el IVA
@@ -69,8 +70,10 @@ class Servicio(Entidad):  # Clase abstracta Servicio, hereda de Entidad
             raise CalculoInconsistenteError(f"Impuesto fuera de rango: {impuesto}")  # Error de cálculo
         if not 0 <= descuento < 1:  # El descuento debe estar entre 0 y menos de 100 %
             raise CalculoInconsistenteError(f"Descuento fuera de rango: {descuento}")  # Error de cálculo
+        if not 0 <= recargo <= 0.5:  # El recargo no puede ser negativo ni superar el 50 %
+            raise CalculoInconsistenteError(f"Recargo fuera de rango: {recargo}")  # Error de cálculo
         base = self.costo_base(duracion)  # Se obtiene el costo base (polimórfico)
-        total = base * (1 - descuento) * (1 + impuesto)  # Se aplica descuento y luego impuesto
+        total = base * (1 + recargo) * (1 - descuento) * (1 + impuesto)  # Recargo, descuento y luego impuesto
         if total <= 0:  # Un total cero o negativo es inconsistente
             raise CalculoInconsistenteError(f"Costo total inconsistente: {total}")  # Error de cálculo
         return round(total, 2)  # Se devuelve redondeado a dos decimales
@@ -87,13 +90,14 @@ class Servicio(Entidad):  # Clase abstracta Servicio, hereda de Entidad
         return self.calcular_costo(datos)  # Cotiza con IVA por defecto
 
     @cotizar.register(dict)  # Versión para diccionarios
-    def _(self, datos):  # Recibe {'duracion': .., 'impuesto': .., 'descuento': ..}
+    def _(self, datos):  # Recibe {'duracion': .., 'impuesto': .., 'descuento': .., 'recargo': ..}
         if "duracion" not in datos:  # La duración es obligatoria
             raise ValidacionError("El diccionario de cotización requiere 'duracion'")  # Error
         return self.calcular_costo(  # Llama al cálculo con los valores del diccionario
             datos["duracion"],  # Duración
             datos.get("impuesto"),  # Impuesto opcional
             datos.get("descuento", 0.0),  # Descuento opcional
+            datos.get("recargo", 0.0),  # Recargo opcional
         )  # Fin de la llamada
 
     def validar(self):  # Implementación del método abstracto de Entidad
@@ -117,8 +121,8 @@ class ReservaSala(Servicio):  # Servicio especializado 1: reserva de salas
         return True  # Duración válida
 
     def costo_base(self, duracion):  # Sobrescribe el cálculo del costo base
-        recargo = 1.2 if self._capacidad > 20 else 1.0  # Salas grandes tienen recargo del 20 %
-        return self._tarifa_base * duracion * recargo  # Tarifa x horas x recargo
+        factor_capacidad = 1.2 if self._capacidad > 20 else 1.0  # Salas de más de 20 personas cuestan 20 % más
+        return self._tarifa_base * duracion * factor_capacidad  # Tarifa x horas x factor de capacidad
 
     def describir(self):  # Sobrescribe la descripción
         return f"Sala '{self._nombre}' para {self._capacidad} personas - ${self._tarifa_base:,.0f}/hora"  # Texto

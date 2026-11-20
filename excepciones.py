@@ -72,3 +72,21 @@ class CalculoInconsistenteError(SoftwareFJError):  # Error en el cálculo de cos
 
     def __init__(self, mensaje):  # Constructor con el mensaje del error
         super().__init__(mensaje, "ERR-CAL")  # Código de cálculo inconsistente
+
+
+class FechaInvalidaError(ValidacionError):  # Error cuando la fecha de la reserva no es válida
+    """Se lanza cuando la fecha de una reserva es anterior a hoy o no tiene el formato correcto."""
+
+    def __init__(self, mensaje):  # Constructor con el mensaje del error
+        super().__init__(mensaje)  # Se inicializa como error de validación
+        self.codigo = "ERR-FEC"  # Código propio para errores de fecha
+
+
+class LimiteReservasError(SoftwareFJError):  # Error cuando un cliente supera el máximo de reservas
+    """Se lanza cuando un cliente intenta tener más reservas activas de las permitidas."""
+
+    def __init__(self, nombre_cliente, limite):  # Recibe el nombre del cliente y el límite vigente
+        super().__init__(  # Se inicializa la excepción base
+            f"{nombre_cliente} ya tiene {limite} reservas activas (máximo permitido: {limite})",  # Mensaje
+            "ERR-LIM",  # Código propio del límite de reservas
+        )  # Fin de la inicialización
