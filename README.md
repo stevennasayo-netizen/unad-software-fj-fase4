@@ -14,6 +14,8 @@ Requiere Python 3.10 o superior (no usa librerías externas).
 python main.py
 ```
 
+Primero se ejecuta una simulación automática de 29 operaciones. Al final el programa pregunta si se desea abrir el **menú interactivo**, donde se pueden registrar clientes y servicios, crear reservas, procesar pagos, cancelar y consultar el log manualmente.
+
 ## Estructura
 | Archivo | Contenido |
 |---|---|
@@ -24,17 +26,24 @@ python main.py
 | `reserva.py` | Clase `Reserva` (confirmar, cancelar, procesar) |
 | `sistema.py` | Gestor con listas internas y captura de errores |
 | `logger.py` | Configuración del archivo de logs |
-| `main.py` | Simulación de 24 operaciones válidas e inválidas |
+| `menu.py` | Menú interactivo en consola con control de errores de digitación |
+| `main.py` | Simulación de 29 operaciones válidas e inválidas y acceso al menú |
 
 ## Conceptos aplicados
 - **Abstracción:** `Entidad` y `Servicio` son clases abstractas (`ABC`, `@abstractmethod`).
 - **Herencia:** `Cliente`, `Servicio` y `Reserva` heredan de `Entidad`; los tres servicios heredan de `Servicio`.
 - **Polimorfismo:** cada servicio sobrescribe `costo_base()`, `validar_parametros()` y `describir()`.
 - **Encapsulación:** atributos privados (`__nombre`, `__documento`…) con `@property` y setters validados.
-- **Sobrecarga de métodos:** `calcular_costo(duracion[, impuesto[, descuento]])` y `cotizar()` con `@singledispatchmethod` (acepta número o diccionario).
+- **Sobrecarga de métodos:** `calcular_costo(duracion[, impuesto[, descuento[, recargo]]])` y `cotizar()` con `@singledispatchmethod` (acepta número o diccionario).
 - **Manejo de excepciones:**
   - `try/except` → `sistema.ejecutar_operacion()`
   - `try/except/else` → `Reserva.confirmar()`, `sistema.registrar_cliente()`
   - `try/except/finally` → `Reserva.procesar()`, `sistema.crear_reserva()`
   - Encadenamiento `raise ... from ...` → `Reserva.confirmar()` y `Reserva.procesar()`
 - **Logs:** todos los eventos y errores quedan en `logs/sistema.log`.
+
+## Reglas de negocio propias
+- **Límite de reservas:** un cliente puede tener máximo 3 reservas activas (pendientes o confirmadas). La cuarta lanza `LimiteReservasError`.
+- **Fecha de la reserva:** se acepta `AAAA-MM-DD` o la fecha de hoy por defecto; fechas pasadas o mal escritas lanzan `FechaInvalidaError`.
+- **Recargo de fin de semana:** las reservas de sábado o domingo tienen un recargo del 15 %.
+- **Salas grandes:** las salas de más de 20 personas cuestan 20 % más por hora.

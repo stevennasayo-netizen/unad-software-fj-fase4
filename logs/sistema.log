@@ -1,84 +1,52 @@
-2026-11-19 21:17:43 | INFO     | === Sistema Software FJ iniciado ===
-2026-11-19 21:17:43 | INFO     | Cliente registrado: Cliente#1: Ana María Rojas (Doc: ******6789, ana.rojas@correo.com)
-2026-11-19 21:17:43 | INFO     | Cliente registrado: Cliente#2: Luis Pérez (Doc: ****3456, luis.perez@empresa.co)
-2026-11-19 21:17:43 | ERROR    | Registro de cliente fallido: [ERR-VAL] Correo 'carlos-correo' con formato inválido
-2026-11-19 21:17:43 | ERROR    | Registro de cliente fallido: [ERR-PAR] Falta el parámetro obligatorio: 'nombre'
-2026-11-19 21:17:43 | ERROR    | Registro de cliente fallido: [ERR-CLI] Ya existe un cliente con documento 1023456789
-2026-11-19 21:17:43 | INFO     | Servicio registrado: ReservaSala#5: Sala 'Sala Innovación' para 30 personas - $50,000/hora
-2026-11-19 21:17:43 | INFO     | Servicio registrado: AlquilerEquipo#6: 3 x Portátil ('Portátiles Pro') - $80,000/día c/u
-2026-11-19 21:17:43 | INFO     | Servicio registrado: Asesoria#7: Asesoría en Computación en la nube (nivel experto) - $120,000/hora
-2026-11-19 21:17:43 | ERROR    | Creación de servicio ReservaSala fallida: [ERR-SRV] Tarifa base inválida: -100
-2026-11-19 21:17:43 | ERROR    | Creación de servicio Asesoria fallida: [ERR-SRV] Nivel 'maestro' no válido. Use: ['basico', 'intermedio', 'experto']
-2026-11-19 21:17:43 | ERROR    | Parámetros incorrectos para AlquilerEquipo: AlquilerEquipo.__init__() missing 2 required positional arguments: 'tipo_equipo' and 'cantidad'
-2026-11-19 21:17:43 | CRITICAL | Instanciar Servicio abstracto -> error inesperado TypeError: Can't instantiate abstract class Servicio without an implementation for abstract methods 'costo_base', 'describir', 'validar_parametros'
-2026-11-19 21:17:43 | INFO     | Reserva #10 confirmada por $214,200.00
-2026-11-19 21:17:43 | DEBUG    | Intento de reserva terminado. Total reservas: 1
-2026-11-19 21:17:43 | INFO     | Reserva #11 confirmada por $1,285,200.00
-2026-11-19 21:17:43 | DEBUG    | Intento de reserva terminado. Total reservas: 2
-2026-11-19 21:17:43 | ERROR    | Reserva fallida: [ERR-RES] No se pudo confirmar la reserva #12 | Causa: [ERR-VAL] Una asesoría dura entre 0.5 y 8 horas (recibido: 20)
-2026-11-19 21:17:43 | INFO     | Reserva #12 cancelada. Motivo: Error en la confirmación
-2026-11-19 21:17:43 | DEBUG    | Intento de reserva terminado. Total reservas: 3
-2026-11-19 21:17:43 | ERROR    | Reserva fallida: [ERR-RES] No se pudo confirmar la reserva #13 | Causa: [ERR-CAL] Descuento fuera de rango: 1.5
-2026-11-19 21:17:43 | INFO     | Reserva #13 cancelada. Motivo: Error en la confirmación
-2026-11-19 21:17:43 | DEBUG    | Intento de reserva terminado. Total reservas: 4
-2026-11-19 21:17:43 | ERROR    | Reserva fallida: [ERR-DIS] El servicio 'Asesoría Cloud' no está disponible
-2026-11-19 21:17:43 | INFO     | Reserva #14 cancelada. Motivo: Error en la confirmación
-2026-11-19 21:17:43 | DEBUG    | Intento de reserva terminado. Total reservas: 5
-2026-11-19 21:17:43 | ERROR    | Reserva fallida: [ERR-RES] La reserva requiere un cliente válido
-2026-11-19 21:17:43 | DEBUG    | Intento de reserva terminado. Total reservas: 5
-2026-11-19 21:17:43 | INFO     | Iniciando procesamiento de la reserva #10
-2026-11-19 21:17:43 | INFO     | Reserva #10 procesada. Cambio: $35,800.00
-2026-11-19 21:17:43 | INFO     | Fin del procesamiento de la reserva #10 (estado: PROCESADA)
-2026-11-19 21:17:43 | INFO     | Procesar reserva #10 -> OK
-2026-11-19 21:17:43 | INFO     | Iniciando procesamiento de la reserva #11
-2026-11-19 21:17:43 | INFO     | Fin del procesamiento de la reserva #11 (estado: CONFIRMADA)
-2026-11-19 21:17:43 | ERROR    | Procesar reserva #11 -> [ERR-RES] Monto de pago inválido: 'mil pesos' | Causa: could not convert string to float: 'mil pesos'
-2026-11-19 21:17:43 | INFO     | Iniciando procesamiento de la reserva #11
-2026-11-19 21:17:43 | INFO     | Fin del procesamiento de la reserva #11 (estado: CONFIRMADA)
-2026-11-19 21:17:43 | ERROR    | Procesar reserva #11 -> [ERR-RES] Pago insuficiente: $1,000.00 de $1,285,200.00
-2026-11-19 21:17:43 | ERROR    | Cancelar reserva #10 -> [ERR-OPE] No se puede cancelar la reserva #10 en estado PROCESADA
-2026-11-19 21:17:43 | INFO     | Reserva #11 cancelada. Motivo: Cambio de fecha
-2026-11-19 21:17:43 | INFO     | Cancelar reserva #11 -> OK
-2026-11-19 21:17:43 | ERROR    | Cotizar con texto -> [ERR-VAL] Tipo de dato no soportado para cotizar: str
-2026-11-19 22:20:47 | INFO     | === Sistema Software FJ iniciado ===
-2026-11-19 22:20:47 | INFO     | Cliente registrado: Cliente#1: Ana María Rojas (Doc: ******6789, ana.rojas@correo.com)
-2026-11-19 22:20:47 | INFO     | Cliente registrado: Cliente#2: Luis Pérez (Doc: ****3456, luis.perez@empresa.co)
-2026-11-19 22:20:47 | ERROR    | Registro de cliente fallido: [ERR-VAL] Correo 'carlos-correo' con formato inválido
-2026-11-19 22:20:47 | ERROR    | Registro de cliente fallido: [ERR-PAR] Falta el parámetro obligatorio: 'nombre'
-2026-11-19 22:20:47 | ERROR    | Registro de cliente fallido: [ERR-CLI] Ya existe un cliente con documento 1023456789
-2026-11-19 22:20:47 | INFO     | Servicio registrado: ReservaSala#5: Sala 'Sala Innovación' para 30 personas - $50,000/hora
-2026-11-19 22:20:47 | INFO     | Servicio registrado: AlquilerEquipo#6: 3 x Portátil ('Portátiles Pro') - $80,000/día c/u
-2026-11-19 22:20:47 | INFO     | Servicio registrado: Asesoria#7: Asesoría en Computación en la nube (nivel experto) - $120,000/hora
-2026-11-19 22:20:47 | ERROR    | Creación de servicio ReservaSala fallida: [ERR-SRV] Tarifa base inválida: -100
-2026-11-19 22:20:47 | ERROR    | Creación de servicio Asesoria fallida: [ERR-SRV] Nivel 'maestro' no válido. Use: ['basico', 'intermedio', 'experto']
-2026-11-19 22:20:47 | ERROR    | Parámetros incorrectos para AlquilerEquipo: AlquilerEquipo.__init__() missing 2 required positional arguments: 'tipo_equipo' and 'cantidad'
-2026-11-19 22:20:47 | CRITICAL | Instanciar Servicio abstracto -> error inesperado TypeError: Can't instantiate abstract class Servicio without an implementation for abstract methods 'costo_base', 'describir', 'validar_parametros'
-2026-11-19 22:20:47 | INFO     | Reserva #10 confirmada por $214,200.00
-2026-11-19 22:20:47 | DEBUG    | Intento de reserva terminado. Total reservas: 1
-2026-11-19 22:20:47 | INFO     | Reserva #11 confirmada por $1,285,200.00
-2026-11-19 22:20:47 | DEBUG    | Intento de reserva terminado. Total reservas: 2
-2026-11-19 22:20:47 | ERROR    | Reserva fallida: [ERR-RES] No se pudo confirmar la reserva #12 | Causa: [ERR-VAL] Una asesoría dura entre 0.5 y 8 horas (recibido: 20)
-2026-11-19 22:20:47 | INFO     | Reserva #12 cancelada. Motivo: Error en la confirmación
-2026-11-19 22:20:47 | DEBUG    | Intento de reserva terminado. Total reservas: 3
-2026-11-19 22:20:47 | ERROR    | Reserva fallida: [ERR-RES] No se pudo confirmar la reserva #13 | Causa: [ERR-CAL] Descuento fuera de rango: 1.5
-2026-11-19 22:20:47 | INFO     | Reserva #13 cancelada. Motivo: Error en la confirmación
-2026-11-19 22:20:47 | DEBUG    | Intento de reserva terminado. Total reservas: 4
-2026-11-19 22:20:47 | ERROR    | Reserva fallida: [ERR-DIS] El servicio 'Asesoría Cloud' no está disponible
-2026-11-19 22:20:47 | INFO     | Reserva #14 cancelada. Motivo: Error en la confirmación
-2026-11-19 22:20:47 | DEBUG    | Intento de reserva terminado. Total reservas: 5
-2026-11-19 22:20:47 | ERROR    | Reserva fallida: [ERR-RES] La reserva requiere un cliente válido
-2026-11-19 22:20:47 | DEBUG    | Intento de reserva terminado. Total reservas: 5
-2026-11-19 22:20:47 | INFO     | Iniciando procesamiento de la reserva #10
-2026-11-19 22:20:47 | INFO     | Reserva #10 procesada. Cambio: $35,800.00
-2026-11-19 22:20:47 | INFO     | Fin del procesamiento de la reserva #10 (estado: PROCESADA)
-2026-11-19 22:20:47 | INFO     | Procesar reserva #10 -> OK
-2026-11-19 22:20:47 | INFO     | Iniciando procesamiento de la reserva #11
-2026-11-19 22:20:47 | INFO     | Fin del procesamiento de la reserva #11 (estado: CONFIRMADA)
-2026-11-19 22:20:47 | ERROR    | Procesar reserva #11 -> [ERR-RES] Monto de pago inválido: 'mil pesos' | Causa: could not convert string to float: 'mil pesos'
-2026-11-19 22:20:47 | INFO     | Iniciando procesamiento de la reserva #11
-2026-11-19 22:20:47 | INFO     | Fin del procesamiento de la reserva #11 (estado: CONFIRMADA)
-2026-11-19 22:20:47 | ERROR    | Procesar reserva #11 -> [ERR-RES] Pago insuficiente: $1,000.00 de $1,285,200.00
-2026-11-19 22:20:47 | ERROR    | Cancelar reserva #10 -> [ERR-OPE] No se puede cancelar la reserva #10 en estado PROCESADA
-2026-11-19 22:20:47 | INFO     | Reserva #11 cancelada. Motivo: Cambio de fecha
-2026-11-19 22:20:47 | INFO     | Cancelar reserva #11 -> OK
-2026-11-19 22:20:47 | ERROR    | Cotizar con texto -> [ERR-VAL] Tipo de dato no soportado para cotizar: str
+2026-11-19 22:55:13 | INFO     | === Sistema Software FJ iniciado ===
+2026-11-19 22:55:13 | INFO     | Cliente registrado: Cliente#1: Valentina Gómez (Doc: ******6543, valentina.gomez@correo.com)
+2026-11-19 22:55:13 | INFO     | Cliente registrado: Cliente#2: Andrés Castillo (Doc: ****4321, andres.castillo@redes.co)
+2026-11-19 22:55:13 | ERROR    | Registro de cliente fallido: [ERR-VAL] Correo 'jorge.ruiz@' con formato inválido
+2026-11-19 22:55:13 | ERROR    | Registro de cliente fallido: [ERR-VAL] Teléfono '6012345' inválido: debe tener 10 dígitos
+2026-11-19 22:55:13 | ERROR    | Registro de cliente fallido: [ERR-CLI] Ya existe un cliente con documento 79654321
+2026-11-19 22:55:13 | INFO     | Servicio registrado: ReservaSala#5: Sala 'Sala Chapinero' para 25 personas - $65,000/hora
+2026-11-19 22:55:13 | INFO     | Servicio registrado: AlquilerEquipo#6: 2 x Switch Catalyst 9200 ('Kit de red Cisco') - $95,000/día c/u
+2026-11-19 22:55:13 | INFO     | Servicio registrado: Asesoria#7: Asesoría en Catalyst Center y SD-Access (nivel experto) - $150,000/hora
+2026-11-19 22:55:13 | ERROR    | Creación de servicio ReservaSala fallida: [ERR-SRV] Capacidad de sala inválida: 0
+2026-11-19 22:55:13 | ERROR    | Creación de servicio Asesoria fallida: [ERR-SRV] Nivel 'senior' no válido. Use: ['basico', 'intermedio', 'experto']
+2026-11-19 22:55:13 | ERROR    | Parámetros incorrectos para AlquilerEquipo: AlquilerEquipo.__init__() missing 2 required positional arguments: 'tipo_equipo' and 'cantidad'
+2026-11-19 22:55:13 | CRITICAL | Instanciar Servicio abstracto -> error inesperado TypeError: Can't instantiate abstract class Servicio without an implementation for abstract methods 'costo_base', 'describir', 'validar_parametros'
+2026-11-19 22:55:13 | INFO     | Reserva #10 confirmada por $371,280.00
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 1
+2026-11-19 22:55:13 | INFO     | Reserva #11 confirmada por $610,470.00
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 2
+2026-11-19 22:55:13 | INFO     | Reserva #12 confirmada por $213,486.00 (incluye recargo de fin de semana)
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 3
+2026-11-19 22:55:13 | INFO     | Reserva #13 confirmada por $714,000.00
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 4
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-LIM] Andrés Castillo ya tiene 3 reservas activas (máximo permitido: 3)
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 4
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-RES] No se pudo confirmar la reserva #14 | Causa: [ERR-VAL] Una asesoría dura entre 0.5 y 8 horas (recibido: 12)
+2026-11-19 22:55:13 | INFO     | Reserva #14 cancelada. Motivo: Error en la confirmación
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 5
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-FEC] No se puede reservar en una fecha pasada (2026-11-18)
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 5
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-FEC] Fecha '25/12/2026' inválida, use AAAA-MM-DD | Causa: time data '25/12/2026' does not match format '%Y-%m-%d'
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 5
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-RES] No se pudo confirmar la reserva #17 | Causa: [ERR-CAL] Descuento fuera de rango: 1.2
+2026-11-19 22:55:13 | INFO     | Reserva #17 cancelada. Motivo: Error en la confirmación
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 6
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-DIS] El servicio 'Kit de red Cisco' no está disponible
+2026-11-19 22:55:13 | INFO     | Reserva #18 cancelada. Motivo: Error en la confirmación
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 7
+2026-11-19 22:55:13 | ERROR    | Reserva fallida: [ERR-RES] La reserva requiere un cliente válido
+2026-11-19 22:55:13 | DEBUG    | Intento de reserva terminado. Total reservas: 7
+2026-11-19 22:55:13 | INFO     | Iniciando procesamiento de la reserva #10
+2026-11-19 22:55:13 | INFO     | Reserva #10 procesada. Cambio: $28,720.00
+2026-11-19 22:55:13 | INFO     | Fin del procesamiento de la reserva #10 (estado: PROCESADA)
+2026-11-19 22:55:13 | INFO     | Procesar reserva #10 -> OK
+2026-11-19 22:55:13 | INFO     | Iniciando procesamiento de la reserva #11
+2026-11-19 22:55:13 | INFO     | Fin del procesamiento de la reserva #11 (estado: CONFIRMADA)
+2026-11-19 22:55:13 | ERROR    | Procesar reserva #11 -> [ERR-RES] Monto de pago inválido: 'quinientos mil' | Causa: could not convert string to float: 'quinientos mil'
+2026-11-19 22:55:13 | INFO     | Iniciando procesamiento de la reserva #11
+2026-11-19 22:55:13 | INFO     | Fin del procesamiento de la reserva #11 (estado: CONFIRMADA)
+2026-11-19 22:55:13 | ERROR    | Procesar reserva #11 -> [ERR-RES] Pago insuficiente: $50,000.00 de $610,470.00
+2026-11-19 22:55:13 | ERROR    | Cancelar reserva #10 -> [ERR-OPE] No se puede cancelar la reserva #10 en estado PROCESADA
+2026-11-19 22:55:13 | INFO     | Reserva #11 cancelada. Motivo: Equipos ya no se necesitan
+2026-11-19 22:55:13 | INFO     | Cancelar reserva #11 -> OK
+2026-11-19 22:55:13 | ERROR    | Cotizar con texto -> [ERR-VAL] Tipo de dato no soportado para cotizar: str
