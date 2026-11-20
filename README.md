@@ -1,6 +1,6 @@
 # Sistema Integral de Gestión de Clientes, Servicios y Reservas — Software FJ
 
-**Curso:** Programación (213023) — UNAD
+**Curso:** Programación (213023A_2204) — UNAD
 **Actividad:** Fase 4 — Componente práctico, prácticas simuladas
 **Autor:** Alvaro Steven Carreño Nasayo
 
