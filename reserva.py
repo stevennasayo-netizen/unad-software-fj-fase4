@@ -4,6 +4,7 @@ Clase Reserva que integra cliente, servicio, duración y estado.
 Implementa confirmación, cancelación y procesamiento con manejo de excepciones.
 """
 
+from datetime import date, datetime  # Para manejar la fecha de la reserva
 from entidad import Entidad  # Clase abstracta base
 from cliente import Cliente  # Clase Cliente para validar el tipo
 from servicios import Servicio  # Clase Servicio para validar el tipo
@@ -13,6 +14,7 @@ from excepciones import (  # Excepciones usadas
     ServicioNoDisponibleError,  # Servicio no disponible
     OperacionNoPermitidaError,  # Transición de estado inválida
     SoftwareFJError,  # Excepción base del sistema
+    FechaInvalidaError,  # Fecha de reserva inválida
 )  # Fin de importaciones
 
 
@@ -23,8 +25,10 @@ class Reserva(Entidad):  # Reserva hereda de Entidad
     CONFIRMADA = "CONFIRMADA"  # Estado después de confirmar
     CANCELADA = "CANCELADA"  # Estado después de cancelar
     PROCESADA = "PROCESADA"  # Estado final después de procesar el pago
+    RECARGO_FIN_DE_SEMANA = 0.15  # Las reservas de sábado o domingo tienen 15 % de recargo
+    DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]  # Nombres de los días
 
-    def __init__(self, cliente, servicio, duracion):  # Constructor de la reserva
+    def __init__(self, cliente, servicio, duracion, fecha=None):  # Constructor de la reserva
         super().__init__()  # Asigna id y fecha
         if not isinstance(cliente, Cliente):  # El cliente debe ser un objeto Cliente
             raise ReservaInvalidaError("La reserva requiere un cliente válido")  # Error
@@ -33,8 +37,37 @@ class Reserva(Entidad):  # Reserva hereda de Entidad
         self.__cliente = cliente  # Atributo privado: cliente
         self.__servicio = servicio  # Atributo privado: servicio
         self.__duracion = duracion  # Atributo privado: duración solicitada
+        self.__fecha = self.__convertir_fecha(fecha)  # Atributo privado: fecha validada de la reserva
         self.__estado = Reserva.PENDIENTE  # Toda reserva inicia como pendiente
         self.__costo = None  # El costo se calcula al confirmar
+
+    @staticmethod  # Método que no depende de la instancia
+    def __convertir_fecha(fecha):  # Convierte y valida la fecha recibida
+        """Acepta None (hoy), un objeto date o un texto 'AAAA-MM-DD'."""
+        if fecha is None:  # Si no se indica fecha
+            return date.today()  # Se usa la fecha de hoy
+        if isinstance(fecha, str):  # Si la fecha llega como texto
+            try:  # Se intenta convertir el texto a fecha
+                fecha = datetime.strptime(fecha.strip(), "%Y-%m-%d").date()  # Formato AAAA-MM-DD
+            except ValueError as error:  # Si el texto no tiene el formato correcto
+                raise FechaInvalidaError(f"Fecha '{fecha}' inválida, use AAAA-MM-DD") from error  # Encadenado
+        if not isinstance(fecha, date):  # Si no es un objeto fecha
+            raise FechaInvalidaError(f"Tipo de fecha no soportado: {type(fecha).__name__}")  # Error
+        if fecha < date.today():  # No se permiten reservas en fechas pasadas
+            raise FechaInvalidaError(f"No se puede reservar en una fecha pasada ({fecha})")  # Error
+        return fecha  # Fecha válida
+
+    @property  # Getter de la fecha
+    def fecha(self):  # Devuelve la fecha de la reserva
+        return self.__fecha  # Atributo privado
+
+    @property  # Propiedad calculada
+    def es_fin_de_semana(self):  # Indica si la reserva cae en sábado o domingo
+        return self.__fecha.weekday() >= 5  # weekday(): 5 = sábado, 6 = domingo
+
+    @property  # Propiedad calculada
+    def activa(self):  # Indica si la reserva sigue vigente
+        return self.__estado in (Reserva.PENDIENTE, Reserva.CONFIRMADA)  # Pendiente o confirmada
 
     @property  # Getter del estado
     def estado(self):  # Devuelve el estado actual
@@ -59,8 +92,9 @@ class Reserva(Entidad):  # Reserva hereda de Entidad
 
     def describir(self):  # Implementación del método abstracto de Entidad
         costo = f"${self.__costo:,.2f}" if self.__costo else "sin calcular"  # Texto del costo
+        dia = Reserva.DIAS[self.__fecha.weekday()]  # Nombre del día de la semana
         return (f"{self.__cliente.nombre} -> {self.__servicio.nombre} "  # Cliente y servicio
-                f"({self.__duracion}) [{self.__estado}] costo: {costo}")  # Duración, estado y costo
+                f"({self.__duracion}) {dia} {self.__fecha} [{self.__estado}] costo: {costo}")  # Fecha, estado y costo
 
     def confirmar(self, impuesto=None, descuento=0.0):  # Confirma la reserva
         """Confirma la reserva usando try/except/else."""
@@ -71,14 +105,16 @@ class Reserva(Entidad):  # Reserva hereda de Entidad
             raise ServicioNoDisponibleError(self.__servicio.nombre)  # Error de disponibilidad
         try:  # Bloque que puede fallar
             self.validar()  # Valida cliente y duración
-            costo = self.__servicio.calcular_costo(self.__duracion, impuesto, descuento)  # Calcula el costo
+            recargo = Reserva.RECARGO_FIN_DE_SEMANA if self.es_fin_de_semana else 0.0  # Recargo si es fin de semana
+            costo = self.__servicio.calcular_costo(self.__duracion, impuesto, descuento, recargo)  # Calcula el costo
         except SoftwareFJError as error:  # Si falla la validación o el cálculo
             raise ReservaInvalidaError(  # Se lanza un error de reserva...
                 f"No se pudo confirmar la reserva #{self.id}") from error  # ...encadenado con la causa original
         else:  # Solo se ejecuta si NO hubo excepción
             self.__costo = costo  # Se guarda el costo calculado
             self.__estado = Reserva.CONFIRMADA  # Se cambia el estado
-            log.info(f"Reserva #{self.id} confirmada por ${costo:,.2f}")  # Se registra el evento
+            nota = " (incluye recargo de fin de semana)" if recargo else ""  # Aclaración si hubo recargo
+            log.info(f"Reserva #{self.id} confirmada por ${costo:,.2f}{nota}")  # Se registra el evento
         return self.__costo  # Devuelve el costo confirmado
 
     def cancelar(self, motivo="Sin motivo"):  # Cancela la reserva
