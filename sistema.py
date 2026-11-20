@@ -7,11 +7,13 @@ Captura todos los errores para que la aplicación nunca se detenga.
 from cliente import Cliente  # Clase Cliente
 from reserva import Reserva  # Clase Reserva
 from logger import log  # Logger global
-from excepciones import SoftwareFJError, ClienteInvalidoError  # Excepciones del sistema
+from excepciones import SoftwareFJError, ClienteInvalidoError, LimiteReservasError  # Excepciones del sistema
 
 
 class SistemaSoftwareFJ:  # Clase que coordina toda la operación
     """Administra clientes, servicios y reservas en memoria (sin base de datos)."""
+
+    MAX_RESERVAS_ACTIVAS = 3  # Regla de negocio: máximo de reservas vigentes por cliente
 
     def __init__(self):  # Constructor del sistema
         self.__clientes = []  # Lista interna de clientes
@@ -54,11 +56,17 @@ class SistemaSoftwareFJ:  # Clase que coordina toda la operación
 
     # ---------- Reservas ----------
 
-    def crear_reserva(self, cliente, servicio, duracion, impuesto=None, descuento=0.0):  # Crea y confirma
+    def reservas_activas_de(self, cliente):  # Cuenta las reservas vigentes de un cliente
+        """Devuelve cuántas reservas pendientes o confirmadas tiene el cliente."""
+        return sum(1 for r in self.__reservas if r.cliente is cliente and r.activa)  # Conteo
+
+    def crear_reserva(self, cliente, servicio, duracion, impuesto=None, descuento=0.0, fecha=None):  # Crea y confirma
         """Crea una reserva y la confirma. Devuelve la reserva o None si falla."""
         reserva = None  # Variable que guardará la reserva
         try:  # Bloque que puede fallar
-            reserva = Reserva(cliente, servicio, duracion)  # Se crea la reserva
+            if cliente is not None and self.reservas_activas_de(cliente) >= self.MAX_RESERVAS_ACTIVAS:  # Límite
+                raise LimiteReservasError(cliente.nombre, self.MAX_RESERVAS_ACTIVAS)  # Error de límite
+            reserva = Reserva(cliente, servicio, duracion, fecha)  # Se crea la reserva con su fecha
             reserva.confirmar(impuesto, descuento)  # Se confirma (calcula el costo)
         except SoftwareFJError as error:  # Cualquier error del sistema
             causa = f" | Causa: {error.__cause__}" if error.__cause__ else ""  # Muestra la excepción encadenada
@@ -89,6 +97,27 @@ class SistemaSoftwareFJ:  # Clase que coordina toda la operación
             return resultado  # Devuelve el resultado
 
     # ---------- Consultas ----------
+
+    @property  # Copia de la lista de clientes (no se expone la original)
+    def clientes(self):  # Getter de clientes
+        return list(self.__clientes)  # Devuelve una copia
+
+    @property  # Copia de la lista de servicios
+    def servicios(self):  # Getter de servicios
+        return list(self.__servicios)  # Devuelve una copia
+
+    @property  # Copia de la lista de reservas
+    def reservas(self):  # Getter de reservas
+        return list(self.__reservas)  # Devuelve una copia
+
+    def buscar_cliente(self, documento):  # Busca un cliente por su documento
+        """Devuelve el cliente con ese documento o None si no existe."""
+        documento = str(documento).strip()  # Se limpia el texto recibido
+        return next((c for c in self.__clientes if c.documento == documento), None)  # Primera coincidencia
+
+    def buscar_reserva(self, id_reserva):  # Busca una reserva por su número
+        """Devuelve la reserva con ese id o None si no existe."""
+        return next((r for r in self.__reservas if r.id == id_reserva), None)  # Primera coincidencia
 
     def resumen(self):  # Devuelve un resumen del estado del sistema
         """Devuelve un texto con todo lo registrado en memoria."""
